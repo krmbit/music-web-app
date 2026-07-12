@@ -492,7 +492,7 @@ async function parseSong(handle) {
             artist:   t.artist  || 'Unknown Artist',
             album:    t.album   || 'Unknown Album',
             track:    t.track   || 0,
-            duration: file.size ? 0 : 0,
+            duration: 0,
             artUrl,
             handle,
             lrcHandle: null,
@@ -539,16 +539,23 @@ function renderSidebarPlaylists() {
     const isActive = (activeFilter === `playlist:${plName}`) ? 'active' : '';
     html += `
       <div class="playlist-item-wrapper">
-        <button class="nav-btn ${isActive}" onclick="setPlaylistActive('${esc(plName)}')">
+        <button class="nav-btn ${isActive}" data-plname="${esc(plName)}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
           ${esc(plName)}
         </button>
-        <button class="playlist-del-btn" onclick="deletePlaylist('${esc(plName)}', event)" title="Delete Playlist">✕</button>
+        <button class="playlist-del-btn" data-del-plname="${esc(plName)}" title="Delete Playlist">✕</button>
       </div>
     `;
   }
   container.innerHTML = html;
 }
+
+document.getElementById('sidebar-playlists').addEventListener('click', e => {
+  const delBtn = e.target.closest('[data-del-plname]');
+  if (delBtn) { deletePlaylist(delBtn.dataset.delPlname, e); return; }
+  const navBtn = e.target.closest('[data-plname]');
+  if (navBtn) setPlaylistActive(navBtn.dataset.plname);
+});
 
 function createPlaylist() {
   const name = prompt("Enter a name for your new playlist:");
@@ -594,21 +601,26 @@ function showPlaylistMenu(e, songId) {
     playlistItems = `<div class="playlist-dropdown-item" style="color:var(--text-3); cursor:default;">No custom playlists</div>`;
   } else {
     playlistItems = keys.map(k => `
-      <div class="playlist-dropdown-item" onclick="addSongToPlaylist('${esc(k)}')">Add to: ${esc(k)}</div>
+      <div class="playlist-dropdown-item" data-plname="${esc(k)}">Add to: ${esc(k)}</div>
     `).join('');
   }
-  
+
   menu.innerHTML = `<div class="playlist-dropdown-header">Playlist Options</div>${playlistItems}`;
   menu.classList.remove('hidden');
-  
-  const rect = e.currentTarget.getBoundingClientRect();
+
+  const rect = e.target.closest('.card-more-btn, .list-more-btn').getBoundingClientRect();
   menu.style.left = `${window.scrollX + rect.left - 130}px`;
   menu.style.top = `${window.scrollY + rect.bottom + 6}px`;
-  
+
   setTimeout(() => {
     document.addEventListener('click', closePlaylistMenu, { once: true });
   }, 0);
 }
+
+document.getElementById('playlist-dropdown').addEventListener('click', e => {
+  const item = e.target.closest('[data-plname]');
+  if (item) addSongToPlaylist(item.dataset.plname);
+});
 
 function closePlaylistMenu() {
   document.getElementById('playlist-dropdown').classList.add('hidden');
@@ -664,8 +676,8 @@ function renderGrid(list) {
     return;
   }
   document.getElementById('song-grid').innerHTML = list.map(s => `
-    <div class="song-card ${cur?.id === s.id ? 'playing' : ''}" id="card-${s.id}" onclick="playSong('${s.id}')">
-      <button class="card-more-btn" onclick="showPlaylistMenu(event, '${s.id}')">•••</button>
+    <div class="song-card ${cur?.id === s.id ? 'playing' : ''}" id="card-${esc(s.id)}" data-song-id="${esc(s.id)}">
+      <button class="card-more-btn" data-song-id="${esc(s.id)}">•••</button>
       <div class="card-art-wrap">
         ${s.artUrl
           ? `<img class="card-art" src="${s.artUrl}" alt="" loading="lazy">`
@@ -690,15 +702,24 @@ function renderList(list) {
   document.getElementById('song-list').innerHTML = `
     <div class="list-header"><span>#</span><span></span><span>Title</span><span>Album</span><span>Time</span><span></span></div>
     ${list.map((s,i) => `
-    <div class="list-item ${cur?.id === s.id ? 'playing' : ''}" id="li-${s.id}" onclick="playSong('${s.id}')">
+    <div class="list-item ${cur?.id === s.id ? 'playing' : ''}" id="li-${esc(s.id)}" data-song-id="${esc(s.id)}">
       <span class="li-num">${i+1}</span>
       ${s.artUrl ? `<img class="li-art" src="${s.artUrl}" alt="" loading="lazy">` : `<div class="li-art"></div>`}
       <div class="li-info"><div class="li-title">${esc(s.title)}</div><div class="li-artist">${esc(s.artist)}</div></div>
       <div class="li-album">${esc(s.album)}</div>
-      <div class="li-duration" id="dur-${s.id}">${s.duration ? fmt(s.duration) : '—'}</div>
-      <button class="list-more-btn" onclick="showPlaylistMenu(event, '${s.id}')">•••</button>
+      <div class="li-duration" id="dur-${esc(s.id)}">${s.duration ? fmt(s.duration) : '—'}</div>
+      <button class="list-more-btn" data-song-id="${esc(s.id)}">•••</button>
     </div>`).join('')}`;
 }
+
+function onLibraryClick(e) {
+  const moreBtn = e.target.closest('.card-more-btn, .list-more-btn');
+  if (moreBtn) { showPlaylistMenu(e, moreBtn.dataset.songId); return; }
+  const item = e.target.closest('.song-card, .list-item');
+  if (item) playSong(item.dataset.songId);
+}
+document.getElementById('song-grid').addEventListener('click', onLibraryClick);
+document.getElementById('song-list').addEventListener('click', onLibraryClick);
 
 function setView(v) {
   currentView = v;
@@ -799,11 +820,13 @@ function updatePlayBtn(playing) {
 
 function skip(s) { audio.currentTime = Math.max(0, Math.min(audio.duration||0, audio.currentTime+s)); }
 function prevSong() {
+  if (!queue.length) return;
   if (audio.currentTime > 3) { audio.currentTime = 0; return; }
   queueIndex = (queueIndex - 1 + queue.length) % queue.length;
   loadAndPlay();
 }
 function nextSong() {
+  if (!queue.length) return;
   queueIndex = (queueIndex + 1) % queue.length;
   loadAndPlay();
 }

@@ -1,45 +1,29 @@
-# Apple Music
+# Music
 
-A modern application for discovering and managing Apple Music content.
+A single-file, browser-based music player for your local library. Point it at a folder of audio files and it plays them entirely client-side — no server, no account, no upload.
 
 ## Overview
 
-This project provides an intuitive interface for interacting with Apple Music services. Whether you're looking to explore new music, create playlists, or manage your library, this tool makes it easy.
+`index.html` is the whole app: HTML, CSS, and JavaScript in one file, with no build step and no dependencies to install. It uses the [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API) to read a folder you choose, reads ID3/metadata tags client-side via [jsmediatags](https://github.com/aadsm/jsmediatags), and never sends your files anywhere.
 
 ## Features
 
-- 🎵 Browse and search Apple Music catalog
-- 📱 User-friendly interface
-- 🎧 Playlist management
-- ⭐ Personalized recommendations
+- Grid and list views of your library, with search across title/artist/album
+- Full playback controls: shuffle, repeat (off/all/one), seek, skip ±15s, variable speed
+- Loved songs and custom playlists, persisted in `localStorage`
+- Synced lyrics view (reads a matching `.lrc` file next to a track)
+- Album-art-driven background color accent
 
-## Prerequisites
+## Requirements
 
-- Node.js (v14 or higher)
-- npm or yarn
-- Apple Music API credentials
-
-## Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/krmbit/Apple-Music.git
-   cd Apple-Music
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Configure your environment variables (see `.env.example` for details)
+- A Chromium-based browser (Chrome or Edge) — the File System Access API isn't available in Firefox or Safari
+- A local folder of `.mp3`, `.m4a`, `.flac`, `.aac`, or `.ogg` files (optionally with matching `.lrc` lyric files)
 
 ## Usage
 
-Start the application:
-```bash
-npm start
-```
+Open `index.html` directly in Chrome or Edge (double-click it, or drag it into the browser), click **Open Music Folder**, and grant access to the folder containing your music. Your library loads and plays entirely in the browser — nothing is uploaded or transmitted.
+
+Serving it over a local static server (e.g. `npx serve .`) also works and is otherwise equivalent.
 
 ## Contributing
 
@@ -47,8 +31,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is open source and available under the MIT License.
-
-## Author
-
-Created as my first project - Happy to collaborate!
+This project is open source and available under the [MIT License](LICENSE).
