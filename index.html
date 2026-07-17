@@ -286,38 +286,38 @@ input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.2)}
       <div id="np-title" style="color:var(--text-3)">Not Playing</div>
       <div id="np-artist"></div>
     </div>
-    <button class="np-love" id="love-btn" onclick="toggleLove()">
+    <button class="np-love" id="love-btn" onclick="toggleLove()" aria-label="Love this song">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </button>
   </div>
   <div class="controls">
     <div class="ctrl-btns">
-      <button class="ctrl-btn secondary" id="shuffle-btn" onclick="toggleShuffle()" title="Shuffle">
+      <button class="ctrl-btn secondary" id="shuffle-btn" onclick="toggleShuffle()" title="Shuffle" aria-label="Shuffle">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
       </button>
-      <button class="ctrl-btn" onclick="prevSong()" title="Previous">
+      <button class="ctrl-btn" onclick="prevSong()" title="Previous" aria-label="Previous song">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
       </button>
-      <button class="ctrl-btn secondary" onclick="skip(-15)" title="Back 15s">
+      <button class="ctrl-btn secondary" onclick="skip(-15)" title="Back 15s" aria-label="Skip back 15 seconds">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/><text x="6.5" y="15.5" font-size="6" fill="currentColor" font-family="sans-serif">15</text></svg>
       </button>
-      <button class="ctrl-btn play-pause" id="play-btn" onclick="togglePlay()">
+      <button class="ctrl-btn play-pause" id="play-btn" onclick="togglePlay()" aria-label="Play">
         <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         <svg id="pause-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
       </button>
-      <button class="ctrl-btn secondary" onclick="skip(15)" title="Forward 15s">
+      <button class="ctrl-btn secondary" onclick="skip(15)" title="Forward 15s" aria-label="Skip forward 15 seconds">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 13c0 3.31-2.69 6-6 6s-6-2.69-6-6 2.69-6 6-6v4l5-5-5-5v4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8h-2z"/><text x="6.5" y="15.5" font-size="6" fill="currentColor" font-family="sans-serif">15</text></svg>
       </button>
-      <button class="ctrl-btn" onclick="nextSong()" title="Next">
+      <button class="ctrl-btn" onclick="nextSong()" title="Next" aria-label="Next song">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/></svg>
       </button>
-      <button class="ctrl-btn secondary" id="repeat-btn" onclick="toggleRepeat()" title="Repeat">
+      <button class="ctrl-btn secondary" id="repeat-btn" onclick="toggleRepeat()" title="Repeat" aria-label="Repeat">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
       </button>
     </div>
     <div class="progress-row">
       <span class="time-label" id="current-time">0:00</span>
-      <div class="progress-bar" id="progress-bar" onclick="seekTo(event)">
+      <div class="progress-bar" id="progress-bar" onclick="seekTo(event)" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <div class="progress-fill" id="progress-fill" style="width:0%">
           <div class="progress-thumb"></div>
         </div>
@@ -326,12 +326,12 @@ input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.2)}
     </div>
   </div>
   <div class="right-controls">
-    <button class="speed-btn" onclick="cycleSpeed()"><span id="speed-label">1×</span></button>
+    <button class="speed-btn" onclick="cycleSpeed()" aria-label="Playback speed"><span id="speed-label">1×</span></button>
     <div class="volume-wrap">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5zm7-.17v6.34L9.83 13H7v-2h2.83L12 8.83z"/></svg>
-      <input type="range" id="volume" min="0" max="100" value="80" oninput="audio.volume=this.value/100">
+      <input type="range" id="volume" min="0" max="100" value="80" oninput="audio.volume=this.value/100" aria-label="Volume">
     </div>
-    <button class="right-btn" id="lyrics-btn" onclick="toggleLyrics()" title="Lyrics">
+    <button class="right-btn" id="lyrics-btn" onclick="toggleLyrics()" title="Lyrics" aria-label="Toggle lyrics view">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
     </button>
   </div>
@@ -408,37 +408,39 @@ async function openFolder() {
   document.getElementById('landing').classList.add('hidden');
   showScanOverlay('Scanning folder…', 'Finding your songs…');
 
-  const fileHandles = [];
+  const fileEntries = [];
   const lrcMap = {};
-  await collectFilesEnhanced(dirHandle, fileHandles, lrcMap);
+  await collectFilesEnhanced(dirHandle, fileEntries, lrcMap, '');
 
-  const total = fileHandles.length;
+  const total = fileEntries.length;
   if (!total) {
     hideScanOverlay();
     document.getElementById('song-grid').innerHTML = `<div class="empty"><h3>No songs found</h3><p>Make sure you picked the right folder</p></div>`;
     return;
   }
 
+  // Release art from any previously-scanned library before discarding it
+  songs.forEach(s => { if (s.artUrl) URL.revokeObjectURL(s.artUrl); });
   songs = [];
   document.getElementById('song-grid').innerHTML = '';
   document.getElementById('track-count').textContent = `Scanning…`;
 
   // Parse metadata in batches of 8
   const BATCH = 8;
-  for (let i = 0; i < fileHandles.length; i += BATCH) {
-    const batch = fileHandles.slice(i, i + BATCH);
+  for (let i = 0; i < fileEntries.length; i += BATCH) {
+    const batch = fileEntries.slice(i, i + BATCH);
     const pct = Math.round((i / total) * 100);
     document.getElementById('scan-bar').style.width = pct + '%';
     document.getElementById('scan-sub').textContent = `${i} / ${total} songs`;
-    
-    await Promise.all(batch.map(async h => {
-      await parseSong(h);
-      const base = h.name.replace(/\.[^.]+$/, '');
+
+    await Promise.all(batch.map(async entry => {
+      await parseSong(entry);
+      const base = entry.path.replace(/\.[^.]+$/, '');
       if (lrcMap[base]) {
         try {
           const lrcFile = await lrcMap[base].getFile();
           const text = await lrcFile.text();
-          const song = songs.find(s => s.handle === h);
+          const song = songs.find(s => s.id === entry.path);
           if (song) song._lrcContent = text;
         } catch(e) {}
       }
@@ -455,30 +457,41 @@ async function openFolder() {
   document.getElementById('track-count').textContent = `${songs.length} songs`;
 }
 
-async function collectFilesEnhanced(dirHandle, audioOut, lrcMap) {
+async function collectFilesEnhanced(dirHandle, audioOut, lrcMap, path) {
   for await (const [name, handle] of dirHandle.entries()) {
+    const entryPath = path ? `${path}/${name}` : name;
     if (handle.kind === 'directory') {
-      await collectFilesEnhanced(handle, audioOut, lrcMap);
+      await collectFilesEnhanced(handle, audioOut, lrcMap, entryPath);
     } else {
       const ext = name.split('.').pop().toLowerCase();
       if (['m4a','mp3','flac','aac','ogg'].includes(ext)) {
-        audioOut.push(handle);
+        audioOut.push({ handle, path: entryPath });
       } else if (ext === 'lrc') {
-        const base = name.replace(/\.lrc$/i, '');
+        const base = entryPath.replace(/\.lrc$/i, '');
         lrcMap[base] = handle;
       }
     }
   }
 }
 
-async function parseSong(handle) {
+async function parseSong({ handle, path }) {
   try {
     const file = await handle.getFile();
+    const fallback = () => {
+      songs.push({
+        id: path,
+        title: stripExt(handle.name),
+        artist: 'Unknown Artist',
+        album: 'Unknown Album',
+        track: 0, duration: 0,
+        artUrl: null, handle, lrcHandle: null,
+      });
+    };
+    if (typeof jsmediatags === 'undefined') { fallback(); return; }
     return new Promise(resolve => {
       jsmediatags.read(file, {
         onSuccess(tag) {
           const t = tag.tags;
-          const id = handle.name + '_' + file.size;
           let artUrl = null;
           if (t.picture) {
             const { data, format } = t.picture;
@@ -487,7 +500,7 @@ async function parseSong(handle) {
             artUrl = URL.createObjectURL(blob);
           }
           songs.push({
-            id,
+            id: path,
             title:    t.title   || stripExt(handle.name),
             artist:   t.artist  || 'Unknown Artist',
             album:    t.album   || 'Unknown Album',
@@ -499,17 +512,7 @@ async function parseSong(handle) {
           });
           resolve();
         },
-        onError() {
-          songs.push({
-            id: handle.name + '_' + file.size,
-            title: stripExt(handle.name),
-            artist: 'Unknown Artist',
-            album: 'Unknown Album',
-            track: 0, duration: 0,
-            artUrl: null, handle, lrcHandle: null,
-          });
-          resolve();
-        }
+        onError() { fallback(); resolve(); }
       });
     });
   } catch(e) {}
@@ -760,6 +763,13 @@ async function loadAndPlay() {
   document.getElementById('np-artist').textContent = song.artist;
   document.title = `${song.title} — ${song.artist}`;
 
+  document.getElementById('progress-fill').style.width = '0%';
+  document.getElementById('current-time').textContent = '0:00';
+  document.getElementById('total-time').textContent = '0:00';
+  document.getElementById('imm-progress-fill').style.width = '0%';
+  document.getElementById('imm-current-time').textContent = '0:00';
+  document.getElementById('imm-total-time').textContent = '0:00';
+
   // Full Screen Dashboard Sync
   document.getElementById('imm-title').textContent = song.title;
   document.getElementById('imm-artist').textContent = `${song.artist} — ${song.album}`;
@@ -809,7 +819,8 @@ function togglePlay() {
 function updatePlayBtn(playing) {
   document.getElementById('play-icon').style.display = playing ? 'none' : '';
   document.getElementById('pause-icon').style.display = playing ? '' : 'none';
-  
+  document.getElementById('play-btn').setAttribute('aria-label', playing ? 'Pause' : 'Play');
+
   const immPlay = document.getElementById('imm-play-icon');
   const immPause = document.getElementById('imm-pause-icon');
   if (immPlay && immPause) {
@@ -871,7 +882,8 @@ audio.addEventListener('timeupdate', () => {
   
   document.getElementById('progress-fill').style.width = pct+'%';
   document.getElementById('current-time').textContent = fmt(audio.currentTime);
-  
+  document.getElementById('progress-bar').setAttribute('aria-valuenow', Math.round(pct));
+
   const immProgressFill = document.getElementById('imm-progress-fill');
   const immCurrentTime = document.getElementById('imm-current-time');
   if (immProgressFill) immProgressFill.style.width = pct+'%';
