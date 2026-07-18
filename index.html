@@ -604,9 +604,12 @@ function showPlaylistMenu(e, songId) {
   if (keys.length === 0) {
     playlistItems = `<div class="playlist-dropdown-item" style="color:var(--text-3); cursor:default;">No custom playlists</div>`;
   } else {
-    playlistItems = keys.map(k => `
-      <div class="playlist-dropdown-item" data-plname="${esc(k)}">Add to: ${esc(k)}</div>
-    `).join('');
+    playlistItems = keys.map(k => {
+      const inPlaylist = playlists[k].includes(songId);
+      return `
+      <div class="playlist-dropdown-item" data-plname="${esc(k)}">${inPlaylist ? '✓ Remove from' : 'Add to'}: ${esc(k)}</div>
+    `;
+    }).join('');
   }
 
   menu.innerHTML = `<div class="playlist-dropdown-header">Playlist Options</div>${playlistItems}`;
@@ -623,20 +626,21 @@ function showPlaylistMenu(e, songId) {
 
 document.getElementById('playlist-dropdown').addEventListener('click', e => {
   const item = e.target.closest('[data-plname]');
-  if (item) addSongToPlaylist(item.dataset.plname);
+  if (item) togglePlaylistMembership(item.dataset.plname);
 });
 
 function closePlaylistMenu() {
   document.getElementById('playlist-dropdown').classList.add('hidden');
 }
 
-function addSongToPlaylist(plName) {
+function togglePlaylistMembership(plName) {
   if (!activeMenuSongId) return;
-  if (!playlists[plName].includes(activeMenuSongId)) {
-    playlists[plName].push(activeMenuSongId);
-    localStorage.setItem('playlists', JSON.stringify(playlists));
-  }
+  const idx = playlists[plName].indexOf(activeMenuSongId);
+  if (idx === -1) playlists[plName].push(activeMenuSongId);
+  else playlists[plName].splice(idx, 1);
+  localStorage.setItem('playlists', JSON.stringify(playlists));
   closePlaylistMenu();
+  renderLibrary();
 }
 
 // ── RENDER LIBRARY ─────────────────────────────────────────────────────────
@@ -698,8 +702,8 @@ function renderGrid(list) {
         <div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
       </div>
       <div class="card-info">
-        <div class="card-title">${esc(s.title)}</div>
-        <div class="card-artist">${esc(s.artist)}</div>
+        <div class="card-title" title="${esc(s.title)}">${esc(s.title)}</div>
+        <div class="card-artist" title="${esc(s.artist)}">${esc(s.artist)}</div>
       </div>
     </div>`).join('');
 }
@@ -715,8 +719,8 @@ function renderList(list) {
     <div class="list-item ${cur?.id === s.id ? 'playing' : ''}" id="li-${esc(s.id)}" data-song-id="${esc(s.id)}">
       <span class="li-num">${i+1}</span>
       ${s.artUrl ? `<img class="li-art" src="${s.artUrl}" alt="" loading="lazy">` : `<div class="li-art"></div>`}
-      <div class="li-info"><div class="li-title">${esc(s.title)}</div><div class="li-artist">${esc(s.artist)}</div></div>
-      <div class="li-album">${esc(s.album)}</div>
+      <div class="li-info"><div class="li-title" title="${esc(s.title)}">${esc(s.title)}</div><div class="li-artist" title="${esc(s.artist)}">${esc(s.artist)}</div></div>
+      <div class="li-album" title="${esc(s.album)}">${esc(s.album)}</div>
       <div class="li-duration" id="dur-${esc(s.id)}">${s.duration ? fmt(s.duration) : '—'}</div>
       <button class="list-more-btn" data-song-id="${esc(s.id)}">•••</button>
     </div>`).join('')}`;
@@ -766,8 +770,12 @@ async function loadAndPlay() {
   audio.src = currentAudioUrl;
 
   // Global UI Setup
-  document.getElementById('np-title').textContent = song.title;
-  document.getElementById('np-artist').textContent = song.artist;
+  const npTitleEl = document.getElementById('np-title');
+  const npArtistEl = document.getElementById('np-artist');
+  npTitleEl.textContent = song.title;
+  npTitleEl.title = song.title;
+  npArtistEl.textContent = song.artist;
+  npArtistEl.title = song.artist;
   document.title = `${song.title} — ${song.artist}`;
 
   document.getElementById('progress-fill').style.width = '0%';
@@ -778,8 +786,12 @@ async function loadAndPlay() {
   document.getElementById('imm-total-time').textContent = '0:00';
 
   // Full Screen Dashboard Sync
-  document.getElementById('imm-title').textContent = song.title;
-  document.getElementById('imm-artist').textContent = `${song.artist} — ${song.album}`;
+  const immTitleEl = document.getElementById('imm-title');
+  const immArtistEl = document.getElementById('imm-artist');
+  immTitleEl.textContent = song.title;
+  immTitleEl.title = song.title;
+  immArtistEl.textContent = `${song.artist} — ${song.album}`;
+  immArtistEl.title = `${song.artist} — ${song.album}`;
 
   const npArt = document.getElementById('np-art');
   const immArt = document.getElementById('imm-art');
@@ -919,7 +931,9 @@ audio.addEventListener('error', () => {
   if (!queue.length) return;
   consecutivePlaybackErrors++;
   const s = currentSong();
-  document.getElementById('np-title').textContent = s ? `Couldn't play "${s.title}"` : 'Playback error';
+  const npTitleEl = document.getElementById('np-title');
+  npTitleEl.textContent = s ? `Couldn't play "${s.title}"` : 'Playback error';
+  npTitleEl.title = '';
   if (consecutivePlaybackErrors >= queue.length) return; // every track in the queue failed — stop, don't loop forever
   nextSong();
 });
