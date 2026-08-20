@@ -8,11 +8,16 @@ A single-file, browser-based music player for your local library. Point it at a 
 
 ## Features
 
-- Grid and list views of your library, with search across title/artist/album
+- **Dynamic Island player** — a floating pill at the bottom that expands into full controls
+- Grid and list views with search, sorting (title/artist/album/recently added), and adjustable card size
 - Full playback controls: shuffle, repeat (off/all/one), seek, skip ±15s, variable speed
-- Loved songs and custom playlists, persisted in `localStorage`
-- Synced lyrics view (reads a matching `.lrc` file next to a track)
-- Album-art-driven background color accent
+- Loved songs and custom playlists (with add/remove from the ••• menu), persisted in `localStorage`
+- Immersive synced lyrics view (reads a matching `.lrc` file next to a track) with blurred album-art backdrop
+- **Settings panel** — background transparency, library art background, font, accent color, card size
+- Album-art-driven background glow throughout the library
+- A few easter eggs. Try the Konami code.
+
+Earlier design iterations are preserved in [`versions/`](versions/).
 
 ## Requirements
 
